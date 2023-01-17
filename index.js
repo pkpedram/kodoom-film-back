@@ -7,6 +7,7 @@ const path = require('path')
 const mongoose = require('mongoose');
 const actorRouter = require('./routes/actors');
 const directorRouter = require('./routes/directors');
+const genreRouter = require('./routes/genre');
 
 const connectDB =  async () => {
   
@@ -18,6 +19,7 @@ const connectDB =  async () => {
 app.use(cors())
 app.use(express.json())
 app.use('/actors', actorRouter)
+app.use('/genres', genreRouter)
 app.use('/directors', directorRouter)
 app.use('/media', express.static(path.join(__dirname, 'media')))
 
