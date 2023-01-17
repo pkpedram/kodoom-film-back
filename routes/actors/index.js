@@ -56,7 +56,7 @@ actorRouter.get("/", async (req, res) => {
         : 0
     )
     .limit(req.query.pageSize);
-  let count = await Actor.count();
+  let count = await Actor.count({...searchKeyword});
   res.send({
     count: count,
     results: data,
@@ -69,12 +69,13 @@ actorRouter.get("/:id", async (req, res) => {
 
 actorRouter.patch(
   "/:id",
-
+  upload.single("image"),
   async (req, res) => {
     const actorId = req.params.id;
     const actor = await Actor.findById(actorId);
     if (actor) {
       let keys = Object.keys(req.body);
+      console.log(req.body)
       keys.map((key) => (actor[key] = req.body[key]));
       const updatedActor = await actor.save();
       if (updatedActor) {
@@ -93,7 +94,7 @@ actorRouter.delete(
   async (req, res) => {
     const actor = await Actor.findById(req.params.id);
     if (actor) {
-      await product.remove();
+      await actor.remove();
       res.send({ message: "Actor Deleted" });
     } else {
       res.status(404).send({ message: "Actor Not Found" });
