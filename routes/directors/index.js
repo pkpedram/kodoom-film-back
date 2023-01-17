@@ -27,7 +27,7 @@ directorRouter.post("/", upload.single("image"), async (req, res) => {
       image: req.file
         ? "media/" +
           req.file.originalname.split(".")[0] +
-          "_actor." +
+          "_director." +
           req.file.originalname.split(".")[1]
         : null,
     });
@@ -56,7 +56,7 @@ directorRouter.get("/", async (req, res) => {
         : 0
     )
     .limit(req.query.pageSize);
-  let count = await Director.count();
+  let count = await Director.count({...searchKeyword});
   res.send({
     count: count,
     results: data,
@@ -69,7 +69,7 @@ directorRouter.get("/:id", async (req, res) => {
 
 directorRouter.patch(
   "/:id",
-
+    upload.single('image'),
   async (req, res) => {
     const actorId = req.params.id;
     const actor = await Director.findById(actorId);
@@ -93,7 +93,7 @@ directorRouter.delete(
   async (req, res) => {
     const actor = await Director.findById(req.params.id);
     if (actor) {
-      await product.remove();
+      await actor.remove();
       res.send({ message: "Director Deleted" });
     } else {
       res.status(404).send({ message: "Director Not Found" });
